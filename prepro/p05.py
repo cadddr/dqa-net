@@ -4,7 +4,7 @@ import json
 import shutil
 from collections import defaultdict, namedtuple
 import re
-import sys
+import sys; sys.path.append('qa2hypo/en'); sys.path.append('qa2hypo/en/wordnet')
 import random
 from pprint import pprint
 
@@ -16,15 +16,15 @@ from utils import get_pbar
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", default="/home/anglil/data/dqa/shining3")
+    parser.add_argument("--data_dir", default="data/dqa/ai2d")
     parser.add_argument("--target_dir", default="data/s3")
-    parser.add_argument("--glove_path", default="/home/anglil/models/glove/glove.6B.300d.txt")
+    parser.add_argument("--glove_path", default="models/glove/glove.6B.300d.txt")
     parser.add_argument("--min_count", type=int, default=5)
-    parser.add_argument("--vgg_model_path", default="~/models/vgg/vgg-19.caffemodel")
-    parser.add_argument("--vgg_proto_path", default="~/models/vgg/vgg-19.prototxt")
+    parser.add_argument("--vgg_model_path", default="models/vgg/vgg-19.caffemodel")
+    parser.add_argument("--vgg_proto_path", default="models/vgg/vgg-19.prototxt")
     parser.add_argument("--debug", default='False')
     parser.add_argument("--qa2hypo", default='True')
-    parser.add_argument("--qa2hypo_path", default="../dqa/qa2hypo")
+    parser.add_argument("--qa2hypo_path", default="qa2hypo")
     parser.add_argument("--prepro_images", default='True')
     return parser.parse_args()
 
@@ -183,15 +183,15 @@ def anno2rels(anno):
 
     if 'relationships' not in anno:
         return rels
-    for type_, d in anno['relationships'].items():
-        for subtype, dd in d.items():
-            for rel_id, ddd in dd.items():
-                category = ddd['category']
-                origin = ddd['origin'] if 'origin' in ddd else ""
-                destination = ddd['destination'] if 'destination' in ddd else ""
-                rel = Relation(type_, subtype, category, origin, destination)
-                rels.append(rel)
-                types.add((type_, subtype, category))
+    for type_, ddd in anno['relationships'].items():
+        #for subtype, dd in d.items():
+        # for rel_id, ddd in d.items():
+        category = ddd['category']
+        origin = ddd['origin'] if 'origin' in ddd else ""
+        destination = ddd['destination'] if 'destination' in ddd else ""
+        rel = Relation(type_, type_, category, origin, destination)
+        rels.append(rel)
+        types.add((type_, type_, category))
     return rels
 
 

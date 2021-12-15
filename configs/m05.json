@@ -75,5 +75,9 @@
     "sim_func": "dot",
     "val_num_batches": null,
     "val_period": 1
+  },
+  "None": {
+    "data_dir": "data/s3",
+    "fold_path": "data/s3/folds/fold23.json"
   }
 }

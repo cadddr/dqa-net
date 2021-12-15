@@ -3,8 +3,8 @@ require 'optim'
 require 'torch'
 require 'nn'
 require 'math'
-require 'cunn'
-require 'cutorch'
+-- require 'cunn'
+-- require 'cutorch'
 require 'loadcaffe'
 require 'image'
 require 'hdf5'
@@ -24,15 +24,15 @@ cmd:option('--batch_size', 10, 'batch_size')
 
 cmd:option('--out_path', 'image_rep.h5', 'output path')
 cmd:option('--gpuid', 1, 'which gpu to use. -1 = use CPU')
-cmd:option('--backend', 'cudnn', 'nn|cudnn')
+cmd:option('--backend', 'nn', 'nn|cudnn')
 
 opt = cmd:parse(arg)
 print(opt)
 
-cutorch.setDevice(opt.gpuid)
-net=loadcaffe.load(opt.cnn_proto, opt.cnn_model,opt.backend);
+-- cutorch.setDevice(opt.gpuid)
+net=loadcaffe.load(opt.cnn_proto, opt.cnn_model, opt.backend);
 net:evaluate()
-net=net:cuda()
+-- net=net:cuda()
 
 function loadim(imname)
     local im, im2
@@ -66,14 +66,14 @@ local ndims=4096
 local batch_size = opt.batch_size
 
 local sz = #image_path_list
-local feat = torch.CudaTensor(sz, ndims)
+local feat = torch.Tensor(sz, ndims)
 print(string.format('processing %d images...', sz))
 for i = 1, sz, batch_size do
     xlua.progress(i, sz)
     local r = math.min(sz, i + batch_size - 1)
-    local ims = torch.CudaTensor(r-i+1, 3, 224, 224)
+    local ims = torch.Tensor(r-i+1, 3, 224, 224)
     for j = 1, r-i+1 do
-        ims[j] = loadim(image_path_list[i+j-1]):cuda()
+        ims[j] = loadim(image_path_list[i+j-1])
     end
     net:forward(ims)
     feat[{{i,r},{}}] = net.modules[43].output:clone()

@@ -35,10 +35,10 @@ def create_linear_fold():
 
 def create_randomly_categorized_fold():
     parser = argparse.ArgumentParser()
-    parser.add_argument("cat_path")
-    parser.add_argument("fold_path")
+    parser.add_argument("--cat_path", default='data/dqa/ai2d/categories.json')
+    parser.add_argument("--fold_path", default='data/s3/folds.json')
     parser.add_argument("--test_cats", nargs='*')
-    parser.add_argument("--ratio", type=float)
+    parser.add_argument("--ratio", type=float, default=0.8)
     args = parser.parse_args()
     cats_path = args.cat_path
     test_cats = args.test_cats
